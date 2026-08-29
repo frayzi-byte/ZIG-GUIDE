@@ -13,8 +13,15 @@ fn hash(key: []const u8) usize {
 }
 
 const SimpleHashSet = struct {
-    buckets: [8]?[]const u8 = .{ null, null, null, null, null, null, null, null },
+    buckets: [8]?[]const u8,
 
+    pub fn init() SimpleSet {
+        var set: SimpleSet = undefined;
+        // Зануляем всю память под бакеты одной командой
+        @memset(std.mem.asBytes(&set.buckets), 0);
+        return set;
+    }
+    
     pub fn add(self: *SimpleHashSet, key: []const u8) void {
         const h = hash(key);
 
